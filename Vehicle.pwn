@@ -1,3 +1,6 @@
+#define Player:: P_
+#define Vehicle:: V_
+
 #include <a_samp>
 #include <easyDialog>
 #include <EVF2>
