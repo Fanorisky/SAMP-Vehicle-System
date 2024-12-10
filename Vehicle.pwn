@@ -88,6 +88,27 @@ stock DespawnPlayerVehicle(id)
     return 0;
 }
 
+stock FreePlayerVehicle()
+{
+    new e_veh[e_vehicle_data], id = -1, time = 0;
+    for_map(vehicleid : PlayerVehicle)
+    {
+        new aidi;
+        if(iter_get_key_safe(vehicleid, aidi))
+        {
+            map_get_arr_safe(PlayerVehicle, aidi, e_veh[Vehicle::SpawnID]);
+            if(e_veh[Vehicle::SpawnID] != -1)
+            {
+                if((GetTickCount()-e_veh[Vehicle::Time]) > time)
+                {
+                    time = GetTickCount()-e_veh[Vehicle::Time];
+                    id = aidi;
+                }
+            }
+        }
+    }
+    return DespawnPlayerVehicle(e_veh[Vehicle::ID]);
+}
 
 stock DestroyPlayerVehicle(id)
 {
@@ -108,7 +129,9 @@ stock DestroyPlayerVehicle(id)
 stock SpawnPlayerVehicle(modelid, Float:spawn_x, Float:spawn_y, Float:spawn_z, Float:z_angle, color1 = 0, color2 = 0, respawn_delay = -1)
 {
     if(list_size(Vehicle) >= MAX_VEHICLES)
-        return print("Jumlah kendaraan server sudah penuh (1000)! Tidak dapat membuat kendaraan lagi.");
+        FreePlayerVehicle();
+    
+        //return print("Jumlah kendaraan server sudah penuh (1000)! Tidak dapat membuat kendaraan lagi.");
 
     new vehicleid;
     vehicleid = CreateVehicle(modelid, spawn_x, spawn_y, spawn_z, z_angle, color1, color2, respawn_delay);
@@ -118,7 +141,9 @@ stock SpawnPlayerVehicle(modelid, Float:spawn_x, Float:spawn_y, Float:spawn_z, F
 stock CreatePlayerVehicle(ownerid, modelid, Float:spawn_x, Float:spawn_y, Float:spawn_z, Float:z_angle, color1 = 0, color2 = 0)
 {
     if(list_size(Vehicle) >= MAX_VEHICLES)
-        return print("Jumlah kendaraan server sudah penuh (1000)! Tidak dapat membuat kendaraan lagi.");
+        FreePlayerVehicle();
+    
+        //return print("Jumlah kendaraan server sudah penuh (1000)! Tidak dapat membuat kendaraan lagi.");
 
     new vehicleid;
     vehicleid = SpawnPlayerVehicle(modelid, spawn_x, spawn_y, spawn_z, z_angle, color1, color2, 10000);
@@ -145,6 +170,7 @@ FUNC::VehicleCreated(vehicleid, ownerid, modelid, Float:spawn_x, Float:spawn_y, 
     e_veh[Vehicle::Angle] = z_angle;
     e_veh[Vehicle::Fuel] = 100;
     e_veh[Vehicle::Health] = 1000.0;
+    e_veh[Vehicle::Time] = GetTickCount();
     format(e_veh[Vehicle::Plate], 16, "None");
     AddVehicleList(e_veh[Vehicle::ID], e_veh);
     SavePlayerVehicle(e_veh[Vehicle::ID]);
@@ -236,6 +262,7 @@ FUNC::VehicleLoaded(playerid)
                 e_veh[Vehicle::Color][1], 
                 10000
             );
+            e_veh[Vehicle::Time] = GetTickCount();
             e_veh[Vehicle::Despawned] = false;
             e_veh[Vehicle::SpawnID] = vehicleid;
             AddVehicleList(e_veh[Vehicle::ID], e_veh);
@@ -337,6 +364,7 @@ Dialog:DIALOG_VEHICLE_OPTION(playerid, response, listitem, inputtext[])
                     e_veh[Vehicle::Color][1], 
                     10000
                 );
+                e_veh[Vehicle::Time] = GetTickCount();
                 e_veh[Vehicle::SpawnID] = vehicleid;
                 e_veh[Vehicle::Despawned] = false;
                 map_set_arr(PlayerVehicle, SelectVehicle[playerid], e_veh);
