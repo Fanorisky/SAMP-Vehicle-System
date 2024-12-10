@@ -1,6 +1,6 @@
 #define Player:: P_
 #define Vehicle:: V_
-
+anu
 #include <a_samp>
 #include <easyDialog>
 #include <EVF2>
