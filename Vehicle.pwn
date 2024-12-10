@@ -16,7 +16,7 @@ enum
 
 public OnGameModeInit()
 {
-	  Vehicle = list_new();
+	Vehicle = list_new();
     PlayerVehicle = map_new();
     map_set_ordered(PlayerVehicle, true);
 	  return 1;
