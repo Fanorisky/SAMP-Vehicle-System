@@ -107,7 +107,7 @@ stock FreePlayerVehicle()
             }
         }
     }
-    return DespawnPlayerVehicle(e_veh[Vehicle::ID]);
+    return DespawnPlayerVehicle(id);
 }
 
 stock DestroyPlayerVehicle(id)
