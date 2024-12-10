@@ -16,22 +16,22 @@ enum
 
 public OnGameModeInit()
 {
-	Vehicle = list_new();
+	  Vehicle = list_new();
     PlayerVehicle = map_new();
     map_set_ordered(PlayerVehicle, true);
-	return 1;
+	  return 1;
 }
 
 public OnPlayerSpawn(playerid)
 {
     LoadPlayerVehicle(playerid);
-	return 1;
+	  return 1;
 }
 
 public OnPlayerDisconnect(playerid, reason)
 {
-	UnloadPlayerVehicle(playerid);
-	return 1;
+  	UnloadPlayerVehicle(playerid);
+  	return 1;
 }
 
 stock AddVehicleList(id, const arr[e_vehicle_data])
